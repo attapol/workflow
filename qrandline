@@ -1,0 +1,20 @@
+#! /usr/bin/python
+import sys
+from random import random
+
+file_name = sys.argv[1]
+num_lines = int(sys.argv[2])
+approx_total_lines =int(sys.argv[3])
+
+f = open(sys.argv[1])
+printed_so_far = 0
+i = 0
+for line in f:
+	rand = random()
+	prob = (num_lines+0.0) / (approx_total_lines - i)
+	if rand < prob:
+		sys.stdout.write(line)
+		printed_so_far += 1
+		if printed_so_far == num_lines:
+			break
+	i += 1

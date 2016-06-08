@@ -1,0 +1,11 @@
+#! /bin/sh
+function upd(){
+	dest=$1
+	if [ "${dest}" == "" ]; then
+		cd ..
+	else
+		wd=$(pwd)
+		wd="${wd%/${dest}/*}/${dest}"
+		cd ${wd}
+	fi
+}

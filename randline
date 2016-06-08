@@ -1,0 +1,15 @@
+#! /usr/bin/python
+import sys
+from random import shuffle
+
+file_name = sys.argv[1]
+num_lines = int(sys.argv[2])
+
+f = open(sys.argv[1])
+lines = f.readlines()
+shuffle(lines)
+
+num_lines = min(num_lines, len(lines)-1)
+num_lines = max(num_lines, 0)
+for i in xrange(num_lines):
+	sys.stdout.write(lines[i])

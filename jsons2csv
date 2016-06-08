@@ -1,0 +1,35 @@
+#! /usr/bin/env python2.7
+# -*- coding: utf-8 -*-
+"""Combine Json result files into one CSV
+
+This uses csv.DictWriter, so it does not support utf8.
+Let us hope for now that our result files have no Chinese or something in it.
+
+It also assumes that the files indeed have the same fields.
+It will just crash if this is not the case.
+"""
+
+import argparse
+import csv
+import json
+
+def process_args():
+	parser = argparse.ArgumentParser(
+			description='Combine json files with the same fields into one csv.')
+	parser.add_argument('json_file_names',
+			help='Json files. Each file contains one json per line.', nargs='+', type=str)
+	return parser.parse_args()
+
+def main(file_names):
+    headers = []
+    for file_name in file_names:
+        for line in open(file_name):
+            result_dict = json.loads(line)
+            if len(headers) == 0:
+                headers = result_dict.keys()
+                print ','.join(map(lambda x: str(x), headers))
+            print ','.join(map(lambda x: str(result_dict[x]), headers))
+
+if __name__ == '__main__':
+    args = process_args()
+    main(args.json_file_names)    

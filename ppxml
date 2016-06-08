@@ -1,0 +1,16 @@
+#!/usr/bin/python2.6
+
+import codecs
+import xml.dom.minidom as md
+import sys
+
+pretty_print = lambda f: '\n'.join(
+	[line for line in md.parse(codecs.open(f,'r','utf8')).toprettyxml(indent=' '*2).split('\n') 
+	if line.strip()])
+
+if __name__ == "__main__":
+	if len(sys.argv)>=2:
+		 print pretty_print(sys.argv[1])
+	else:
+		sys.exit("Usage: %s [xmlfile]" % sys.argv[0])
+		## end of http://code.activestate.com/recipes/576750/ }}}

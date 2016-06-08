@@ -1,0 +1,11 @@
+#!/bin/sh
+# List python functions defined in the python file
+if [ "$@" = "" ]; then
+	echo 'Specify the python file that you want to list python functions'
+	exit
+fi
+for var in $*
+do
+	var="${var%%.*}"
+	python2.7 -c 'import inspect as i; import '$var' as m; import sys; name_func_tuples = i.getmembers(m, i.isfunction); map(sys.stdout.write, [t[0]+"\n" for t in name_func_tuples if i.getmodule(t[1]) == m])'
+done

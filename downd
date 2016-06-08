@@ -1,0 +1,12 @@
+#! /bin/sh
+function downd(){ 
+	dirs=$(find . -type d -name "${1}")
+	num_dirs=$(printf -- "${dirs}\n" | wc -l)
+	if [ "${dirs}" == "" ]; then
+		printf -- "downd: ${1}: No such directory\n"
+	else
+		cd "${dirs}"
+	fi
+}
+
+
