@@ -1,0 +1,52 @@
+#! /usr/bin/env python2.7
+# -*- coding: utf-8 -*-
+"""Split the files into specified proportions
+
+This utility is useful for splitting featurized dataset into
+train/dev/test. 
+
+"""
+import argparse
+import os
+import random
+from subprocess import check_output
+
+def process_args():
+    parser = argparse.ArgumentParser(description=
+            'Split the file into proportions. Useful for splitting data into train/test')
+    parser.add_argument('input_file', help='Input file. One line per entry/record')
+    parser.add_argument('proportions', type=float, nargs='+', metavar='proportion',
+            help='list of proportions. The sum must be > 0 and <=1')
+    return parser.parse_args()
+
+def main(input_file, proportions):
+    for proportion in proportions:
+        assert 0 < proportion <= 1
+    assert 0 < sum(proportions) <= 1
+    num_line = count_line(input_file)
+    indices = range(num_line)
+    random.shuffle(indices)
+    start_point = 0
+    index_sets = []
+    for proportion in proportions:
+        end_point = start_point + int(proportion * num_line)
+        index_set = set(indices[start_point:end_point])
+        new_file, extension = os.path.splitext(input_file)
+        output_file = open('{}_{}{}'.format(new_file, int(proportion * 100), extension), mode='w')
+        index_sets.append((index_set, output_file))
+        start_point = end_point
+
+    with open(input_file) as f:
+        for line_number, x in enumerate(f):
+            for i, pair in enumerate(index_sets):
+                index_set, output_file = pair
+                if line_number in index_set:
+                    output_file.write(x)
+
+
+def count_line(input_file):
+    return int(check_output(["wc", "-l", input_file]).split()[0])
+
+if __name__ == '__main__':
+    args = process_args()
+    main(args.input_file, args.proportions)
